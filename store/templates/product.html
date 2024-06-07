@@ -28,11 +28,32 @@
                 {% endif %}
                 <br /><br />
                 <a href="{% url 'home' %}" class="btn btn-secondary">Home</a>
+                <button class="btn btn-secondary" id="add-cart" value="{{ product.id }}">Add to Cart</button>
              </center>
             </div>
           </div>
         </div>
       </div>
 </div>
+<script>
+    $(document).on('click', '#add-cart', function(e){
+        e.preventDefault();
+        $.ajax({
+            type: 'POST', 
+            url: '{% url "cartAdd" %}',
+            data: { product_id: $('#add-cart').val(), 
+            csrfmiddlewaretoken: '{{csrf_token}}',
+            action: 'post'
+        },
+        success: function(json){
+            // console.log(json)
+            document.getElementById("cart_quantity").textContent = json.Quantity
 
+        },
+        error: function(xhr, errmsg, err){
+
+        }
+        });
+    });
+</script>
 {% endblock %}
