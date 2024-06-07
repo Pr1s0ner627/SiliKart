@@ -59,9 +59,6 @@ def registerUser(request):
 
 def category(request, cat):
     cat = cat.replace('-',' ')
-    try:
-        category = models.Categorie.objects.get(name=cat)
-        products = models.Product.objects.filter(category=category)
-        return render(request, 'category.html', {'products':products, 'category':category}) 
-    except:
-        return redirect('home')
+    category = models.Categorie.objects.get(name=cat)
+    products = models.Product.objects.filter(category=category)
+    return render(request, 'category.html', {'products':products, 'category':category}) 
