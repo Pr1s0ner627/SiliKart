@@ -13,24 +13,16 @@
 
 <div class="container">
     <div class="row">
-        <center>
-            <div class="col-md-6">
+            <div class="col-md-6 offset-md-3">
                 <br /><br />
                 <form action="{% url 'register' %}" method="post">
                     {% csrf_token %}
-                    <div class="mb-3">
-                      <input type="text" class="form-control" name="username" placeholder="Enter Your Username">
-                    </div>
-                    <div class="mb-3">
-                      <input type="password" class="form-control" name="password" placeholder="Enter Password">
-                    </div>
+                    {{form.as_p}}
                     <br />
-                    <button type="submit" class="btn btn-secondary">Login</button>
+                    <button type="submit" class="btn btn-secondary">Register</button>
                   </form>
                   <br /><br />
             </div>
-        </center>
-        
     </div>
 </div>
 
