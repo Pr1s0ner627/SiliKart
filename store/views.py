@@ -15,6 +15,10 @@ def home(request):
 def about(request):
     return render(request, 'about.html', {})
 
+def product(request, pk):
+    product = models.Product.objects.get(id=pk)
+    return render(request, 'product.html', {'product':product})
+
 def loginUser(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -52,3 +56,12 @@ def registerUser(request):
             return redirect('register')
     else:
         return render(request, 'register.html', {'form':form})
+
+def category(request, cat):
+    cat = cat.replace('-',' ')
+    try:
+        category = models.Categorie.objects.get(name=cat)
+        products = models.Product.objects.filter(category=category)
+        return render(request, 'category.html', {'products':products, 'category':category}) 
+    except:
+        return redirect('home')

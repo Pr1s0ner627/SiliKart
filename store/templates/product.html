@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <br />
+    <div class="card mb-3">
+        <div class="row g-0">
+          <div class="col-md-4">
+            {% if product.ProdOnSale == True %}
+            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
+            {% else %}
+            
+            {% endif %}
+            <img src="{{product.ProdImage.url}}" class="img-fluid rounded-start" alt="...">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+             <center>
+                <h5 class="card-title">{{product.ProdName}}</h5>
+                <br />
+                <p class="card-text">{{product.ProdDesc}}</p>
+                {% if product.ProdOnSale == True %}
+                    <strike>${{product.ProdPrice}}</strike> &nbsp; 
+                    ${{product.ProdSalePrice}}
+                {% else %}
+                    ${{product.ProdPrice}}
+                {% endif %}
+                <br /><br />
+                <a href="{% url 'home' %}" class="btn btn-secondary">Home</a>
+             </center>
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
+
+{% endblock %}
