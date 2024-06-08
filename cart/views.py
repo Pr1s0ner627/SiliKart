@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from .cart import Cart
+from django.contrib import messages
 from store import models
 from django.http import JsonResponse
 # Create your views here.
@@ -21,16 +22,26 @@ def cartAdd(request):
     # response = JsonResponse({'Name':product.ProdName})
     # return response
     response = JsonResponse({'Quantity':cart_quantity})
+    messages.success(request, ("Product added to cart..."))
     return response
 
 def cartUpdate(request):
-    cart = Cart(request)
-    if request.POST.get('action') == 'post':
-        product_id = int(request.POST.get('product_id'))
-        product_qty = int(request.POST.get('product_qty'))
-        cart.update(product=product_id, quantity=product_qty)
-        
-        response = JsonResponse({'Quantity':product_qty})
+    response = JsonResponse({'error': 'Invalid request'})  # Default response for invalid requests
+    if request.method == 'POST' and request.POST.get('action') == 'post':
+        product_id = request.POST.get('product_id')
+        product_qty = request.POST.get('product_qty')
+        # Check if product_id and product_qty are provided and are valid integers
+        if product_id and product_qty and product_id.isdigit() and product_qty.isdigit():
+            product_id = int(product_id)
+            product_qty = int(product_qty)
+
+            cart = Cart(request)
+            cart.update(product=product_id, quantity=product_qty)
+            
+            response = JsonResponse({'Quantity': product_qty})
+            messages.success(request, "Cart has been updated...")
+        else:
+            response = JsonResponse({'error': 'Invalid product ID or quantity'})
     return response
 
 def cartDelete(request):
@@ -40,4 +51,7 @@ def cartDelete(request):
         cart.delete(product=product_id)
         
         response = JsonResponse({'Product':product_id})
+        messages.success(request, ("Item has been deleted successfully..."))
     return response
+
+ 

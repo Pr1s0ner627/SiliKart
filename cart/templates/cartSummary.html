@@ -88,24 +88,27 @@
     });
     
     $(document).on('click', '.update-cart', function(e){
-        e.preventDefault();
-        var productid = $(this).data('index');
-        $.ajax({
-            type: 'POST', 
-            url: '{% url "cartUpdate" %}',
-            data: { product_id: $(this).data('index'), 
-            product_qty: $('#select' + productid + 'option:selected').text(),
-            csrfmiddlewaretoken: '{{csrf_token}}',
+    e.preventDefault();
+    var productid = $(this).data('index');
+    var productQty = $('#select' + productid + ' option:selected').text();
+    
+    $.ajax({
+        type: 'POST', 
+        url: '{% url "cartUpdate" %}',
+        data: { 
+            product_id: productid, 
+            product_qty: productQty,
+            csrfmiddlewaretoken: '{{ csrf_token }}',
             action: 'post'
         },
         success: function(json){
-            // console.log(json)
             location.reload();
         },
         error: function(xhr, errmsg, err){
+            console.error(`Error: ${errmsg}`);
         }
-        });
     });
+});
 </script>
 
 {% endblock %}
