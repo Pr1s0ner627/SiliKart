@@ -58,10 +58,11 @@ def registerUser(request):
         return render(request, 'register.html', {'form':form})
 
 def category(request, cat):
-    cat = cat.replace('-',' ')
-    category = models.Categorie.objects.get(name=cat)
-    products = models.Product.objects.filter(category=category)
-    return render(request, 'category.html', {'products':products, 'category':category}) 
+    cat = cat.replace('-', ' ')
+    category = models.Categorie.objects.get(CatName=cat)
+    products = models.Product.objects.filter(ProdCat=category)
+    return render(request, 'category.html', {'products': products, 'category': category})
 
 def categorySummary(request):
-    return render(request, 'categorySummary.html', {})
+    categories = models.Categorie.objects.all()
+    return render(request, 'categorySummary.html', {'Categories':categories})

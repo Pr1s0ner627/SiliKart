@@ -18,8 +18,8 @@
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="{% url 'categorySummary' %}">All Products</a></li>
                         <li><hr class="dropdown-divider" /></li>
-                        {% for catname in category %}
-                        <li><a class="dropdown-item" href="{% url 'category' category.CatName %}">{{category.CatName}}</a></li>
+                        {%for category in Categories %}
+                        <a href="{% url 'category' category %}">{{category}}</a><br />
                         {% endfor %}
                     </ul>
                 </li>

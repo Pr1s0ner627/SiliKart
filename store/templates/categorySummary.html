@@ -15,7 +15,9 @@
         <center>
             <br /><br />
             <div class="col-8">
-                
+                {%for category in Categories %}
+                <br /><a href="{% url 'category' category %}">{{category}}</a><br />
+                {% endfor %}
                 
             </div>
             <br /><br />
