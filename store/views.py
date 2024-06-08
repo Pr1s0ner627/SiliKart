@@ -62,3 +62,6 @@ def category(request, cat):
     category = models.Categorie.objects.get(name=cat)
     products = models.Product.objects.filter(category=category)
     return render(request, 'category.html', {'products':products, 'category':category}) 
+
+def categorySummary(request):
+    return render(request, 'categorySummary.html', {})
