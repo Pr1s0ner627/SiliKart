@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from . import models
-from .forms import SignUpForm
+from .forms import SignUpForm, UpdateUserForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -66,3 +66,17 @@ def category(request, cat):
 def categorySummary(request):
     categories = models.Categorie.objects.all()
     return render(request, 'categorySummary.html', {'Categories':categories})
+
+def editUser(request):
+    if request.user.is_authenticated:
+        currentUser = User.objects.get(id=request.user.id)
+        userForm = UpdateUserForm(request.POST or None, instance=currentUser)
+        if userForm.is_valid():
+            userForm.save()
+            login(request, currentUser)
+            messages.success(request, "user has been Updated")
+            return redirect('home')
+        return render(request, 'updateUser.html', {'userForm':userForm})
+    else:
+        messages.success(request, "You must be Logged in to Access This page")
+        return redirect('home')
