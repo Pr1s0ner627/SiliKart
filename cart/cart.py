@@ -37,4 +37,29 @@ class Cart():
         updcart[product_id] = product_qty
         self.session.modified = True
         thing = self.cart
+        
         return thing
+    
+    def delete(self, product):
+        product_id = str(product)
+        if product_id in self.cart:
+            del self.cart[product_id]
+        
+        self.session.modified = True
+    
+    def cartTotal(self):
+        product_ids = self.cart.keys()
+        products = models.Product.objects.filter(id__in=product_ids)
+        quantities = self.cart
+        total = 0
+        
+        for key, value in quantities.items():
+            key = int(key)
+            for product in products:
+                if product.id == key:
+                    if product.ProdOnSale == True:
+                        total += (product.ProdSalePrice * value)
+                    else:    
+                        total += (product.ProdPrice * value)
+        
+        return total
