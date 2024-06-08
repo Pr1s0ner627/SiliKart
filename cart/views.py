@@ -23,7 +23,14 @@ def cartAdd(request):
     return response
 
 def cartUpdate(request):
-    pass
+    cart = Cart(request)
+    if request.POST.get('action') == 'post':
+        product_id = int(request.POST.get('product_id'))
+        product_qty = int(request.POST.get('product_qty'))
+        cart.update(product=product_id, quantity=product_qty)
+        
+        response = JsonResponse({'Quantity':product_qty})
+    return response
 
 def cartDelete(request):
     pass
