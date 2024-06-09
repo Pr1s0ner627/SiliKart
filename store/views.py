@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from . import models
-from .forms import SignUpForm, UpdateUserForm
+from .forms import SignUpForm, UpdateUserForm, ChangePasswordForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -79,4 +79,25 @@ def editUser(request):
         return render(request, 'updateUser.html', {'userForm':userForm})
     else:
         messages.success(request, "You must be Logged in to Access This page")
+        return redirect('home')
+
+def editPassword(request):
+    if request.user.is_authenticated:
+        currentUser = request.user
+        if request.method == 'POST':
+            form = ChangePasswordForm(currentUser, request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Password Changed Successfully...")
+                # login(request, currentUser)
+                return redirect('login')
+            else:
+                for error in list(form.errors.values()):
+                    messages.error(request, error)
+                    return redirect('editPassword')
+        else:
+            form = ChangePasswordForm(currentUser)
+            return render(request, 'editPassword.html', {'form':form})
+    else:
+        messages.success(request, "You must be Logged In to View that details...")
         return redirect('home')
