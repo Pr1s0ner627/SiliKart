@@ -90,7 +90,7 @@ def editPassword(request):
                 form.save()
                 messages.success(request, "Password Changed Successfully...")
                 # login(request, currentUser)
-                return redirect('login')
+                return redirect('editUser')
             else:
                 for error in list(form.errors.values()):
                     messages.error(request, error)
@@ -101,3 +101,6 @@ def editPassword(request):
     else:
         messages.success(request, "You must be Logged In to View that details...")
         return redirect('home')
+
+def userProfile(request):
+    pass
