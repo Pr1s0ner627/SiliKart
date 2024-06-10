@@ -9,6 +9,21 @@ class Cart():
             cart = self.session['session_key'] ={}
         self.cart = cart
     
+    def db_add(self, product, quantity):
+        product_id = str(product)
+        product_qty = str(quantity)
+        if product_id in self.cart:
+            pass
+        else:
+            # self.cart[product_id] = {'price':str(product.ProdPrice)}
+            self.cart[product_id] = int(product_qty)
+        self.session.modified = True
+        if self.request.user.is_authenticated:
+            currentUser = models.Profile.objects.filter(user__id=self.request.user.id)
+            carty = str(self.cart)
+            carty = carty.replace("\'", "\"")
+            currentUser.update(old_cart=str(carty))
+
     def add(self, product, quantity):
         product_id = str(product.id)
         product_qty = str(quantity)
@@ -52,6 +67,11 @@ class Cart():
             del self.cart[product_id]
         
         self.session.modified = True
+        if self.request.user.is_authenticated:
+            currentUser = models.Profile.objects.filter(user__id=self.request.user.id)
+            carty = str(self.cart)
+            carty = carty.replace("\'", "\"")
+            currentUser.update(old_cart=str(carty))
     
     def cartTotal(self):
         product_ids = self.cart.keys()
@@ -66,6 +86,5 @@ class Cart():
                     if product.ProdOnSale == True:
                         total += (product.ProdSalePrice * value)
                     else:    
-                        total += (product.ProdPrice * value)
-        
+                        total += (product.ProdPrice * value)  
         return total

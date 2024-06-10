@@ -1,3 +1,4 @@
+from cart.cart import Cart
 from django.shortcuts import render, redirect
 from . import models
 from .forms import SignUpForm, UpdateUserForm, ChangePasswordForm, UserInfoForm
@@ -7,6 +8,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.db.models import Q
+import json
+
 
 # Create your views here.
 def search(request):
@@ -39,6 +42,15 @@ def loginUser(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
+            currentUser = models.Profile.objects.get(user__id=request.user.id)
+            savedCart = currentUser.old_cart
+            if savedCart:
+                convertedCart = json.loads(savedCart)
+                cart = Cart(request)
+                for key, value in convertedCart.items():
+                    cart.db_add(product=key, quantity=value)
+
+
             messages.success(request, ("You are logged in..."))
             return redirect('home')
         else:
