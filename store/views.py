@@ -6,8 +6,21 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
+from django.db.models import Q
 
 # Create your views here.
+def search(request):
+    if request.method == "POST":
+        searched = request.POST['searched']
+        searched = models.Product.objects.filter(Q(ProdName__icontains=searched) | Q(ProdDesc__icontains=searched))
+        if not searched:
+            messages.success(request, ("Item does not Exist...")) 
+            return render(request, 'search.html', {})
+        else:
+            return render(request, 'search.html', {'searched': searched}) 
+    else:
+        return render(request, 'search.html', {})
+
 def home(request):
     products = models.Product.objects.all()
     return render(request, 'index.html', {'products':products})
