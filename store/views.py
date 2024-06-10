@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from . import models
-from .forms import SignUpForm, UpdateUserForm, ChangePasswordForm
+from .forms import SignUpForm, UpdateUserForm, ChangePasswordForm, UserInfoForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -50,7 +50,7 @@ def registerUser(request):
             user = authenticate(username=username, password=password)
             login(request, user)
             messages.success(request, ("You have registered successfully!!!"))
-            return redirect('home')
+            return redirect('userProfile')
         else:
             messages.success(request, ("Please fill all details..."))
             return redirect('register')
@@ -103,4 +103,14 @@ def editPassword(request):
         return redirect('home')
 
 def userProfile(request):
-    pass
+    if request.user.is_authenticated:
+        currentUser = User.objects.get(id=request.user.id)
+        form = UserInfoForm(request.POST or None, instance=currentUser)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "User info has been Updated")
+            return redirect('home')
+        return render(request, 'userProfile.html', {'Form':form})
+    else:
+        messages.success(request, "You must be Logged in to Access This page")
+        return redirect('home')
