@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Header-->
+<header class="bg-dark py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">Checkout</h1>
+            <p class="lead fw-normal text-white-50 mb-0">Review Order and make Payment</p>
+        </div>
+    </div>
+</header>
+<!-- Section-->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+                <div class="col-md-6 offset-md-3">
+                    <div class="card">
+                        <div class="card-header">
+                          Order Summary
+                        </div>
+                        <div class="card-body">
+                            {% for product in cart_products %}
+                                {{product.ProdName}} - 
+                                {% if product.ProdOnSale == True %}
+                        ${{product.ProdSalePrice}}
+                    {% else %}
+                    ${{product.ProdPrice}}
+                    {% endif %}
+                    <br />
+                     <small>Quantity : {% for key, value in quantities.items %}
+                        {% if key == product.id|slugify %}
+                        {{value}}
+                        {% endif %}
+                        {% endfor %}</small>
+                        <br /><br />
+                            {% endfor %}
+                            <strong>Total:  ${{total}}</strong>
+                            <br /><br />
+                            <a class="btn btn-sm btn-outline-secondary" href="{% url 'cartSummary' %}">Update Items</a>
+                        </div>
+                      </div>
+                      <br />
+                      <div class="card">
+                        <div class="card-header">
+                          Shipping Info
+                        </div>
+                        <div class="card-body">
+                          {{Sh_form.as_p}}
+                        </div>
+                      </div>
+                      <br />
+                      <a class="btn btn-secondary" href="#">Continue to Billing</a>
+                    </div>
+                </div>
+            </div>
+</section>
+
+<script>
+    $(document).on('click', '.delete-item', function(e){
+        e.preventDefault();
+        // var productid = $(this).data('index');
+        $.ajax({
+            type: 'POST', 
+            url: '{% url "cartDelete" %}',
+            data: { product_id: $(this).data('index'), 
+            csrfmiddlewaretoken: '{{csrf_token}}',
+            action: 'post'
+        },
+        success: function(json){
+            // console.log(json)
+            location.reload();
+        },
+        error: function(xhr, errmsg, err){
+        }
+        });
+    });
+    
+    $(document).on('click', '.update-cart', function(e){
+    e.preventDefault();
+    var productid = $(this).data('index');
+    var productQty = $('#select' + productid + ' option:selected').text();
+    
+    $.ajax({
+        type: 'POST', 
+        url: '{% url "cartUpdate" %}',
+        data: { 
+            product_id: productid, 
+            product_qty: productQty,
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            action: 'post'
+        },
+        success: function(json){
+            location.reload();
+        },
+        error: function(xhr, errmsg, err){
+            console.error(`Error: ${errmsg}`);
+        }
+    });
+});
+</script>
+
+{% endblock %}
