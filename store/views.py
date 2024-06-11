@@ -6,7 +6,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from django import forms
+from payments.forms import ShippingForm
+from payments.models import ShippingAddress
+from . import models
 from django.db.models import Q
 import json
 
@@ -129,13 +131,17 @@ def editPassword(request):
 
 def userProfile(request):
     if request.user.is_authenticated:
-        currentUser = User.objects.get(id=request.user.id)
+        currentUser = User.objects.get(user__id=request.user.id)
+        Sh_user = ShippingAddress.objects.get(user__id=request.user.id)
         form = UserInfoForm(request.POST or None, instance=currentUser)
-        if form.is_valid():
+        Sh_form = ShippingForm(request.POST or None, instance=Sh_user)
+        if form.is_valid() or Sh_form.is_valid():
             form.save()
+            Sh_form.save()
             messages.success(request, "User info has been Updated")
             return redirect('home')
-        return render(request, 'userProfile.html', {'Form':form})
+        return render(request, 'userProfile.html', {'Form':form, 'Sh_form':Sh_form})
     else:
         messages.success(request, "You must be Logged in to Access This page")
         return redirect('home')
+    

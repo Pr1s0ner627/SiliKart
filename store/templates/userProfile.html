@@ -15,10 +15,15 @@
     <div class="row">
         <div class="col-md-6 offset-md-3">
             <br /><br />
+            <strong>Billing information</strong>
+            <br /><br />
             <form action="{% url 'userProfile' %}" method="post">
                 {% csrf_token %}
                 {{Form.as_p}}
                 <br />
+                <strong>Shipping Address</strong>
+                <br /><br />
+                {{Sh_form.as_p}}
                 <button type="submit" class="btn btn-secondary">Update Profile</button>
                 </form>
             <br /><br />
