@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Header-->
+<header class="bg-dark py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">Checkout</h1>
+            <p class="lead fw-normal text-white-50 mb-0">Review Order and make Payment</p>
+        </div>
+    </div>
+</header>
+<!-- Section-->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+                <div class="col-md-6 offset-md-3">
+                  <div class="accordion" id="accordionExample">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Order Summary
+                        </button>
+                      </h2>
+                      <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                          <div class="card-body">
+                            {% for product in cart_products %}
+                                {{product.ProdName}} - 
+                                {% if product.ProdOnSale == True %}
+                              ${{product.ProdSalePrice}}
+                          {% else %}
+                          ${{product.ProdPrice}}
+                          {% endif %}
+                          <br />
+                          <small>Quantity : {% for key, value in quantities.items %}
+                              {% if key == product.id|slugify %}
+                              {{value}}
+                              {% endif %}
+                              {% endfor %}</small>
+                          <br /><br />
+                            {% endfor %}
+                            <strong>Total:  ${{total}}</strong>
+                            <br /><br />
+                            <a class="btn btn-sm btn-outline-secondary" href="{% url 'cartSummary' %}">Update Items</a>
+                        </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="accordion-item">
+                      <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Shipping Info
+                        </button>
+                      </h2>
+                      <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                          <strong>{{Sh_user.Sh_fullName}}</strong>
+                          <br />
+                          {{Sh_user.Sh_address1}}
+                          {{Sh_user.Sh_address2}}
+                          {{Sh_user.Sh_city}}
+                          {{Sh_user.Sh_state}}
+                          {{Sh_user.Sh_zipCode}}
+                          {{Sh_user.Sh_country}}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                    <br />
+                      <a class="btn btn-secondary" href="{% url 'razorpay' %}">Make Payment</a>
+                    </div>
+                </div>
+            </div>
+</section>
+{% endblock %}

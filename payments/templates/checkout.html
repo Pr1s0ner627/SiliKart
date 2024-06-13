@@ -50,13 +50,13 @@
                         </div>
                       </div>
                       <br />
-                      <a class="btn btn-secondary" href="#">Continue to Billing</a>
+                      <a class="btn btn-secondary" href="{% url 'billingInfo' %}">Continue to Billing</a>
                     </div>
                 </div>
             </div>
 </section>
 
-<script>
+<!-- <script>
     $(document).on('click', '.delete-item', function(e){
         e.preventDefault();
         // var productid = $(this).data('index');
@@ -98,6 +98,6 @@
         }
     });
 });
-</script>
+</script> -->
 
 {% endblock %}

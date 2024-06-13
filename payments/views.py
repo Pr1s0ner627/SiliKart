@@ -19,3 +19,18 @@ def checkout(request):
     else:
         Sh_form = ShippingForm(request.POST or None)
         return render(request, 'checkout.html', {'cart_products':cart_prods, 'quantities':quantities, 'total':totals, 'Sh_form':Sh_form})
+    
+def billingInfo(request):
+    cart = Cart(request)
+    cart_prods = cart.getProd
+    quantities = cart.getQuants
+    totals = cart.cartTotal()
+    if request.user.is_authenticated:
+        Sh_user = ShippingAddress.objects.get(user__id=request.user.id)
+        return render(request, 'billingInfo.html', {'cart_products':cart_prods, 'quantities':quantities, 'total':totals, 'Sh_user':Sh_user})
+    else:
+        Sh_form = ShippingForm(request.POST or None)
+        return render(request, 'billingInfo.html', {'cart_products':cart_prods, 'quantities':quantities, 'total':totals, 'Sh_form':Sh_form})
+    
+def razorpay(request):
+    pass
